@@ -39,7 +39,7 @@ Screen getScreen()
 #endif
 	return screen;
 }
-
+#ifdef __linux__
 void resetColor()
 {
 	printf("\e[%d;%dm",F_DEFAULT,BG_DEFAULT);
@@ -102,41 +102,92 @@ void printText(const int fColor, const int bgColor, const char* text)
 	printf("\e[%d;%dm%s",fColor,bgColor,text);
 	resetColor();
 }
+#elif _WIN32
+
+void resetColor()
+{
+}
+void cursorUp(int n)
+{
+}
+void cursorDown(int n)
+{
+}
+void cursorForward(int n)
+{
+}
+void cursorBack(int n)
+{
+}
+void cursorNextLine(int n)
+{
+}
+void cursorPreLine(int n)
+{
+}
+void setCursorPos(int x, int y)
+{
+}
+void erase(int n)
+{
+}
+void eraseLine(int n)
+{
+}
+void scrollUp(int n)
+{
+}
+void scrollDown(int n)
+{
+}
+void hideCursor()
+{
+}
+void showCursor()
+{
+}
+
+void printText(const int fColor, const int bgColor, const char *text)
+{
+	printf("%s",text);
+}
+#endif
+
 void printBlock(const int color)
 {
 	//char text[10];
 	//sprintf(text,"%d",color);
-	printText(F_DEFAULT,color," ");
+	printText(F_DEFAULT, color, " ");
 }
-void printRed(const char* text)
+void printRed(const char *text)
 {
-	printText(F_RED,BG_DEFAULT,text);
+	printText(F_RED, BG_DEFAULT, text);
 }
-void printBlue(const char* text)
+void printBlue(const char *text)
 {
-	printText(F_BLUE,BG_DEFAULT,text);
+	printText(F_BLUE, BG_DEFAULT, text);
 }
-void printGreen(const char* text)
+void printGreen(const char *text)
 {
-	printText(F_GREEN,BG_DEFAULT,text);
+	printText(F_GREEN, BG_DEFAULT, text);
 }
-void printYellow(const char* text)
+void printYellow(const char *text)
 {
-	printText(F_YELLOW,BG_DEFAULT,text);
+	printText(F_YELLOW, BG_DEFAULT, text);
 }
-void printMagenta(const char* text)
+void printMagenta(const char *text)
 {
-	printText(F_MAGENTA,BG_DEFAULT,text);
+	printText(F_MAGENTA, BG_DEFAULT, text);
 }
-void printCyan(const char* text)
+void printCyan(const char *text)
 {
-	printText(F_CYAN,BG_DEFAULT,text);
+	printText(F_CYAN, BG_DEFAULT, text);
 }
-void printWhite(const char* text)
+void printWhite(const char *text)
 {
-	printText(F_WHITE,BG_DEFAULT,text);
+	printText(F_WHITE, BG_DEFAULT, text);
 }
-void printBlack(const char* text)
+void printBlack(const char *text)
 {
-	printText(F_BLACK,BG_DEFAULT,text);
+	printText(F_BLACK, BG_DEFAULT, text);
 }
