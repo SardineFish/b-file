@@ -9,8 +9,9 @@ class File
 {
     public:
       string path;
-      unsigned long long length;
-      unsigned long long position;
+      long length = 0;
+      long position = 0;
+      long defaultBufferSize = 1024;
       vector<Data*> dataRead;
       File();
       File(string path);
@@ -18,7 +19,10 @@ class File
       void open();
       void close();
       Data* read(DataType type);
-      Data** multiRead(DataType type, int count);
+      Data *readString(long maxLength);
+      Data** readMultiData(DataType type, int count);
+      Data **readMultitring(long maxLength, int count);
+      long setPosition(long pos);
 
     private:
       FILE *fp;

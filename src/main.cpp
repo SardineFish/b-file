@@ -27,6 +27,7 @@ int main(int argsN, char *args[])
     fwrite(&a, sizeof(int), 1, fp);
     fwrite(&b, sizeof(char), 1, fp);
     fwrite(&c, sizeof(long long), 1, fp);
+    fputs("The boy next door.", fp);
     fclose(fp);
     File file = File(filePath);
     file.open();
@@ -35,6 +36,8 @@ int main(int argsN, char *args[])
     data = file.read(T_CHAR);
     printf("%s\n", data->toString());
     data = file.read(T_UINT64);
+    printf("%s\n", data->toString());
+    data = file.readString(1024);
     printf("%s\n", data->toString());
     return 0;
 }

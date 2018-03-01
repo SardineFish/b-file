@@ -22,6 +22,7 @@ void File::open()
 Data* File::read(DataType type)
 {
     Data* data = (Data *)malloc(sizeof(Data));
+    data->file = this;
     data->type = type;
     data->length = 1;
     switch(type)
@@ -51,15 +52,32 @@ Data* File::read(DataType type)
             fread(data->rawData, sizeof(long long), 1, fp);
             break;
         case T_STRING:
-            throw runtime_error("Not supported.");
+            delete data;
+            data = this->readString(defaultBufferSize);
             break;
         default:
             throw runtime_error("Not supported.");
     }
+    data->position = this->position;
+    this->position += data->length;
     this->dataRead.push_back(data);
     return data;
 }
-Data** File::multiRead(DataType type,int count)
+Data* File::readString(long maxLength)
+{
+    Data *data = (Data *)malloc(sizeof(Data));
+    data->file = this;
+    data->type = T_STRING;
+    data->length = maxLength;
+    data->rawData = (byte *)malloc(sizeof(char) * maxLength);
+    data->position = position;
+    fgets((char *)data->rawData, maxLength, fp);
+    position = ftell(fp);
+    data->rawSize = position - data->position;
+    this->dataRead.push_back(data);
+    return data;
+}
+Data** File::readMultiData(DataType type,int count)
 {
     Data **dataList = (Data **)malloc(sizeof(Data *) * count);
     for (int i = 0; i < count;i++)
@@ -67,6 +85,19 @@ Data** File::multiRead(DataType type,int count)
         dataList[i] = this->read(type);
     }
     return dataList;
+}
+Data** File::readMultitring(long maxLength,int count)
+{
+    Data **dataList = (Data **)malloc(sizeof(Data *) * count);
+    for (int i = 0; i < count; i++)
+    {
+        dataList[i] = this->readString(maxLength);
+    }
+    return dataList;
+}
+long File::setPosition(long pos)
+{
+    fseek(fp, pos, SEEK_SET);
 }
 void File::close()
 {

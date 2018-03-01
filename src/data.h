@@ -1,4 +1,5 @@
 #pragma once
+
 enum DataType
 {
     T_BYTE = 1,
@@ -13,12 +14,15 @@ enum DataType
     T_ARRAY = 10,
     T_STRUCT = 11
 };
+class File;
 typedef unsigned char byte;
 struct Data
 {
+    File *file;
+    long position = 0;
     DataType type;
     byte *rawData;
-    unsigned long long rawSize;
-    size_t length;
+    long rawSize = 0;
+    size_t length = 1;
     char *toString();
 };
