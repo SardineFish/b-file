@@ -1,9 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
-#include <sys/ioctl.h>
 #include <unistd.h>
-#include <termios.h>
 #include "CSI.h"
 
 using namespace std;
