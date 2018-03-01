@@ -1,4 +1,4 @@
 all: 
-	g++ main.cpp -o b-file
+	g++ src/main.cpp -o build/b-file
 debug:
-	g++ -g main.cpp -o b-file
+	g++ -g src/main.cpp -o build/b-file
