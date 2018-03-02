@@ -18,6 +18,9 @@ File::File(string path, string mode)
 void File::open()
 {
     this->fp = fopen(path.c_str(), mode.c_str());
+    fseek(fp, 0, SEEK_END);
+    this->length = ftell(fp) + 1;
+    fseek(fp, 0, SEEK_SET);
 }
 Data* File::read(DataType type)
 {
@@ -98,6 +101,7 @@ Data** File::readMultitring(long maxLength,int count)
 long File::setPosition(long pos)
 {
     fseek(fp, pos, SEEK_SET);
+    this->position = pos;
 }
 void File::close()
 {

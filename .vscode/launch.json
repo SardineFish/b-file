@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/file-b.exe",
-            "args": ["open","test.dat"],
+            "args": [/*"open","test.dat"*/],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
