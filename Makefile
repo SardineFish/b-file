@@ -1,5 +1,5 @@
 all: CSI.o main.o file.o data.o cli_mgr.o
-	if [ ! -d "~/build" ]; then \
+	if [ ! -d "./build" ]; then \
 		mkdir build; \
 	fi
 	g++ --std=c++11 main.o CSI.o file.o data.o cli_mgr.o -o build/file-b
