@@ -11,13 +11,17 @@
 using namespace std;
 
 CmdManager *cmdMgr;
-File *file;
+File *file = NULL;
 void open(CmdArgs *args);
 void read(CmdArgs *args);
 void remove(CmdArgs *args);
+void ext(CmdArgs *args);
+void help(CmdArgs *args);
+void info(CmdArgs *args);
+void removeLine();
 int main(int argsN,const char *args[])
 {
-    FILE *fp = fopen("test.dat", "w");
+    /*FILE *fp = fopen("test.dat", "w");
     int a = 100;
     char b = 'a';
     long long c = 923048181;
@@ -25,22 +29,25 @@ int main(int argsN,const char *args[])
     fwrite(&b, sizeof(char), 1, fp);
     fwrite(&c, sizeof(long long), 1, fp);
     fputs("The boy next door.", fp);
-    fclose(fp);
+    fclose(fp);*/
 
     cmdMgr = new CmdManager();
     cmdMgr->registCommand("open", open);
-    cmdMgr->registCommand("remove", remove);
-    cmdMgr->registOp("multi", 'm', true);
     cmdMgr->handleArgs(argsN, args);
 
     delete cmdMgr;
     cmdMgr = new CmdManager();
+    cmdMgr->registCommand("open", open);
     cmdMgr->registCommand("read", read);
     cmdMgr->registCommand("remove", remove);
+    cmdMgr->registCommand("exit", ext);
+    cmdMgr->registCommand("help", help);
+    cmdMgr->registCommand("info", info);
     cmdMgr->registOp("multi", 'm', true);
 
     while(true)
     {
+        cout << "file-b>";
         vector<string> argsInput = readArgs();
         const char *argsInputArr[argsInput.size() + 1];
         argsInputArr[0] = args[0];
@@ -99,13 +106,15 @@ void read(CmdArgs *args)
     DataType type = mapDict[typeStr];
     Data *data = file->read(type);
     cursorPreLine(1);
-    erase(10000);
+    removeLine();
     printGreen("[%d] ", data->position);
     printCyan("[%s] ", typeName[type].c_str());
     printf("%s\n", data->toString());
 }
 void open(CmdArgs *args)
 {
+    if(file)
+        file->close();
     if(args->args.size()<=0)
         throw runtime_error("Arguments error.");
     file = new File(args->args[0], "r");
@@ -113,5 +122,43 @@ void open(CmdArgs *args)
 }
 void remove(CmdArgs *args)
 {
+    Data *data = file->dataRead.back();
+    file->dataRead.pop_back();
+    file->setPosition(file->position - data->rawSize);
+    delete data;
+    #ifdef __linux__
+    removeLine();
+    cursorUp(1);
+    removeLine();
+    cursorUp(1);
+    removeLine();
+
+    #endif
+}
+void ext(CmdArgs *args)
+{
+    file->close();
+    exit(0);
+}
+void help(CmdArgs *args)
+{
+    printf("usage:\n");
+    printf("\topen <path> \topen a file from given path.\n");
+    printf("\tread <type> \tread the data as specific type.\n");
+    printf("\tremove\t\tremove the last read data.\n");
+    printf("\tinfo\t\tget the info.\n");
+    printf("Type \"help\" for more infomation.\n\n");
+}
+void removeLine()
+{
+    printf("\r");
+    printf("                                                ");
+    printf("\r");
+}
+void info(CmdArgs *args)
+{
+    cout << "Path: \"" << file->path << "\"" << endl;
+    cout << "Current position: " << file->position << endl;
+    cout << "Total length: " << file->length << "Bytes" << endl << endl;
 
 }
