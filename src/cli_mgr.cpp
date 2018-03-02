@@ -71,7 +71,7 @@ CmdCommand CmdManager::registCommand(string name, CmdFuncPtr func)
     this->cmdList[name] = cmd;
     return cmd;
 }
-void CmdManager::handleArgs(int argsN, char *args[])
+void CmdManager::handleArgs(int argsN,const char *args[])
 {
     this->argsN = argsN;
     this->args = args;
@@ -100,7 +100,7 @@ void CmdManager::handleArgs(int argsN, char *args[])
     if (activeCmd.func != NULL)
         this->invoke(activeCmd);
 }
-int CmdManager::handleShortOp(char *arg, int argsRestN, char *argsRest[])
+int CmdManager::handleShortOp(const char *arg, int argsRestN,const char *argsRest[])
 {
     for (int i = 1; i < strlen(arg); i++)
     {
@@ -116,7 +116,7 @@ int CmdManager::handleShortOp(char *arg, int argsRestN, char *argsRest[])
             return 0;
     }
 }
-int CmdManager::handleFullOp(char *arg, int argsRestN, char *argsRest[])
+int CmdManager::handleFullOp(const char *arg, int argsRestN, const char *argsRest[])
 {
     string name = string(arg).substr(2);
     CmdOption op = this->opFullList[name];
@@ -132,7 +132,7 @@ int CmdManager::handleFullOp(char *arg, int argsRestN, char *argsRest[])
     this->activeOp.push_back(op);
     return 0;
 }
-int CmdManager::handleCommand(char *command, int argsRestN, char *argsRest[])
+int CmdManager::handleCommand(const char *command, int argsRestN, const char *argsRest[])
 {
     CmdCommand cmd = this->cmdList[string(command)];
     if (cmd.name.length() == 0)
@@ -181,14 +181,14 @@ vector<string> readArgs()
                     continue;
                 }
                 else
-                    goto AddSlice;
+                    break;
             }
 
             // Handle space
             if(buffer[i]==' ')
             {
                 if(!quote)
-                    goto AddSlice;
+                    break;
             }
 
             if(buffer[i]=='\n')
@@ -198,13 +198,13 @@ vector<string> readArgs()
             slice[sliceLength] = '\0';
             continue;
 
-            AddSlice:
-                args.push_back(string(slice));
-                slice[0] = '\0';
-                sliceLength = 0;
-                break;
         }
-        if(buffer[i]=='\0' || buffer[i]=='\n')
+
+        args.push_back(string(slice));
+        slice[0] = '\0';
+        sliceLength = 0;
+        
+        if (buffer[i] == '\0' || buffer[i] == '\n')
             break;
     }
     return args;

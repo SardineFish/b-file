@@ -15,19 +15,30 @@ File *file;
 void open(CmdArgs *args);
 void read(CmdArgs *args);
 void remove(CmdArgs *args);
-int main(int argsN, char *args[])
+int main(int argsN,const char *args[])
 {
     cmdMgr = new CmdManager();
     cmdMgr->registCommand("open", open);
-    cmdMgr->registCommand("read", read);
     cmdMgr->registCommand("remove", remove);
     cmdMgr->registOp("multi", 'm', true);
     cmdMgr->handleArgs(argsN, args);
 
+    delete cmdMgr;
+    cmdMgr = new CmdManager();
+    cmdMgr->registCommand("read", read);
+    cmdMgr->registCommand("remove", remove);
+    cmdMgr->registOp("multi", 'm', true);
 
     while(true)
     {
         vector<string> argsInput = readArgs();
+        const char *argsInputArr[argsInput.size() + 1];
+        argsInputArr[0] = args[0];
+        for (int i = 1; i < argsInput.size() + 1;i++)
+        {
+            argsInputArr[i] = argsInput[i - 1].c_str();
+        }
+        cmdMgr->handleArgs(argsInput.size() + 1, argsInputArr);
     }
     string filePath = "test.dat";
     /*if (argsN <= 1)
@@ -61,7 +72,23 @@ int main(int argsN, char *args[])
 }
 void read(CmdArgs *args)
 {
-
+    if(args->args.size<=0)
+        throw runtime_error("Arguments error.");
+    map<string, DataType> mapDict;
+    mapDict["char"] = T_CHAR;
+    mapDict["byte"] = T_BYTE;
+    mapDict["int16"] = mapDict["short"] = T_INT16;
+    mapDict["uint16"] = mapDict["ushort"] = T_UINT16;
+    mapDict["int"] = mapDict["int32"] = T_INT32;
+    mapDict["uint"] = mapDict["uint32"] = T_UINT32;
+    mapDict["long"] = mapDict["int64"] = T_INT64;
+    mapDict["ulong"] = mapDict["uint64"] = T_INT64;
+    mapDict["string"] = T_STRING;
+    string typeStr = args->args[0];
+    DataType type = mapDict[typeStr];
+    Data *data = file->read(type);
+    cursorPreLine(2);
+    
 }
 void open(CmdArgs *args)
 {

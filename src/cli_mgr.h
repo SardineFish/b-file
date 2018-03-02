@@ -25,7 +25,7 @@ struct CmdOption
       string fullName = "";
       char shortName = '\0';
       bool hasValue = false;
-      char *rawValue = NULL;
+      const char *rawValue = NULL;
 };
 
 struct CmdCommand
@@ -64,14 +64,14 @@ class CmdManager
       void registOp(string fullName, char shortName, bool hasValue = false);
       void registOp(CmdOption cmdOp);
       CmdCommand registCommand(string name, CmdFuncPtr func);
-      void handleArgs(int argsN, char *args[]);
+      void handleArgs(int argsN,const char *args[]);
     
     private:
       int argsN;
-      char **args;
-      int handleShortOp(char *arg, int argsRestN, char *argsRest[]);
-      int handleFullOp(char *arg, int argsRestN, char *argsRest[]);
-      int handleCommand(char *command, int argsRestN, char *argsRest[]);
+      const char **args;
+      int handleShortOp(const char *arg, int argsRestN, const char *argsRest[]);
+      int handleFullOp(const char *arg, int argsRestN, const char *argsRest[]);
+      int handleCommand(const char *command, int argsRestN, const char *argsRest[]);
       void invoke(CmdCommand cmd);
 };
 
