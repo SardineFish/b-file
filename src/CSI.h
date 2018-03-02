@@ -62,13 +62,42 @@ void scrollUp(int n);
 void scrollDown(int n);
 void hideCursor();
 void showCursor();
-void printText(const int fColor, const int bgColor, const char* text);
+//void printText(const int fColor, const int bgColor, const char* text,...);
 void printBlock(const int color);
-void printRed(const char* text);
-void printBlue(const char* text);
-void printGreen(const char* text);
-void printYellow(const char* text);
-void printMagenta(const char* text);
-void printCyan(const char* text);
-void printWhite(const char* text);
-void printBlack(const char* text);
+
+#ifdef __linux__
+#define printText(fColor, bgColor, ...)       \
+	(                                         \
+		printf("\e[%d;%dm", fColor, bgColor), \
+		printf(__VA_ARGS__),                  \
+		resetColor())
+#else
+
+#define printText(fColor, bgColor, ...)       \
+		printf(__VA_ARGS__)
+
+#endif
+
+#define printRed(...) \
+	printText(F_RED, BG_DEFAULT, __VA_ARGS__)
+
+#define printBlue(...) \
+	printText(F_BLUE, BG_DEFAULT, __VA_ARGS__)
+
+#define printGreen(...) \
+	printText(F_GREEN, BG_DEFAULT, __VA_ARGS__)
+
+#define printYellow(...) \
+	printText(F_YELLOW, BG_DEFAULT, __VA_ARGS__)
+
+#define printMagenta(...) \
+	printText(F_MAGENTA, BG_DEFAULT, __VA_ARGS__)
+
+#define printCyan(...) \
+	printText(F_CYAN, BG_DEFAULT, __VA_ARGS__)
+
+#define printWhite(...) \
+	printText(F_WHITE, BG_DEFAULT, __VA_ARGS__)
+
+#define printBlack(...) \
+	printText(F_BLACK, BG_DEFAULT, __VA_ARGS__)

@@ -73,6 +73,9 @@ CmdCommand CmdManager::registCommand(string name, CmdFuncPtr func)
 }
 void CmdManager::handleArgs(int argsN,const char *args[])
 {
+    this->activeArgs.clear();
+    this->activeCmd = CmdCommand();
+    this->activeOp.clear();
     this->argsN = argsN;
     this->args = args;
     workspace = string(args[0]);
@@ -203,7 +206,7 @@ vector<string> readArgs()
         args.push_back(string(slice));
         slice[0] = '\0';
         sliceLength = 0;
-        
+
         if (buffer[i] == '\0' || buffer[i] == '\n')
             break;
     }

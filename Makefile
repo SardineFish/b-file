@@ -5,7 +5,7 @@ debug: CSI.o main.o file.o data.o cli_mgr.o
 	g++ -g --std=c++11 main.o CSI.o file.o data.o cli_mgr.o -o build/file-b.exe
 
 CSI.o: src/CSI.cpp src/CSI.h
-	g++ -g -c --std=c++11 src/CSI.cpp -o CSI.o
+	gcc -g -c --std=c++11 src/CSI.cpp -o CSI.o
 
 main.o: src/main.cpp
 	g++ -g -c --std=c++11 src/main.cpp -o main.o

@@ -17,6 +17,16 @@ void read(CmdArgs *args);
 void remove(CmdArgs *args);
 int main(int argsN,const char *args[])
 {
+    FILE *fp = fopen("test.dat", "w");
+    int a = 100;
+    char b = 'a';
+    long long c = 923048181;
+    fwrite(&a, sizeof(int), 1, fp);
+    fwrite(&b, sizeof(char), 1, fp);
+    fwrite(&c, sizeof(long long), 1, fp);
+    fputs("The boy next door.", fp);
+    fclose(fp);
+
     cmdMgr = new CmdManager();
     cmdMgr->registCommand("open", open);
     cmdMgr->registCommand("remove", remove);
@@ -49,15 +59,6 @@ int main(int argsN,const char *args[])
     }
     else
         filePath = args[1];*/
-    FILE *fp = fopen("test.dat", "w");
-    int a = 0;
-    char b = 'a';
-    long long c = 923048181;
-    fwrite(&a, sizeof(int), 1, fp);
-    fwrite(&b, sizeof(char), 1, fp);
-    fwrite(&c, sizeof(long long), 1, fp);
-    fputs("The boy next door.", fp);
-    fclose(fp);
     File file = File(filePath);
     file.open();
     Data *data = file.read(T_INT32);
@@ -72,9 +73,10 @@ int main(int argsN,const char *args[])
 }
 void read(CmdArgs *args)
 {
-    if(args->args.size<=0)
+    if(args->args.size()<=0)
         throw runtime_error("Arguments error.");
     map<string, DataType> mapDict;
+    map<DataType, string> typeName;
     mapDict["char"] = T_CHAR;
     mapDict["byte"] = T_BYTE;
     mapDict["int16"] = mapDict["short"] = T_INT16;
@@ -82,13 +84,25 @@ void read(CmdArgs *args)
     mapDict["int"] = mapDict["int32"] = T_INT32;
     mapDict["uint"] = mapDict["uint32"] = T_UINT32;
     mapDict["long"] = mapDict["int64"] = T_INT64;
-    mapDict["ulong"] = mapDict["uint64"] = T_INT64;
+    mapDict["ulong"] = mapDict["uint64"] = T_UINT64;
     mapDict["string"] = T_STRING;
+    typeName[T_CHAR] = "Char";
+    typeName[T_BYTE] = "Byte";
+    typeName[T_INT16] = "Int16";
+    typeName[T_UINT16] = "UInt16";
+    typeName[T_INT32] = "Int32";
+    typeName[T_UINT32] = "UInt32";
+    typeName[T_INT64] = "Int64";
+    typeName[T_UINT64] = "UInt64";
+    typeName[T_STRING] = "String";
     string typeStr = args->args[0];
     DataType type = mapDict[typeStr];
     Data *data = file->read(type);
-    cursorPreLine(2);
-    
+    cursorPreLine(1);
+    erase(10000);
+    printGreen("[%d] ", data->position);
+    printCyan("[%s] ", typeName[type].c_str());
+    printf("%s\n", data->toString());
 }
 void open(CmdArgs *args)
 {

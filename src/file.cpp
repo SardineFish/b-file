@@ -42,8 +42,8 @@ Data* File::read(DataType type)
         case T_INT32:
         case T_UINT32:
             data->rawData = (byte *)malloc(8);
-            data->rawSize = sizeof(long);
-            fread(data->rawData, sizeof(long), 1, fp);
+            data->rawSize = sizeof(int);
+            fread(data->rawData, sizeof(int), 1, fp);
             break;
         case T_INT64:
         case T_UINT64:
@@ -59,7 +59,7 @@ Data* File::read(DataType type)
             throw runtime_error("Not supported.");
     }
     data->position = this->position;
-    this->position += data->length;
+    this->position += data->rawSize;
     this->dataRead.push_back(data);
     return data;
 }
