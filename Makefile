@@ -1,8 +1,8 @@
 all: CSI.o main.o file.o data.o cli_mgr.o
-	g++ --std=c++11 CSI.o main.o -o build/file-b
+	g++ --std=c++11 CSI.o main.o cli_mgr.o -o build/file-b
 
 debug: CSI.o main.o file.o data.o cli_mgr.o
-	g++ -g --std=c++11 main.o CSI.o file.o data.o -o build/file-b.exe
+	g++ -g --std=c++11 main.o CSI.o file.o data.o cli_mgr.o -o build/file-b.exe
 
 CSI.o: src/CSI.cpp src/CSI.h
 	g++ -g -c --std=c++11 src/CSI.cpp -o CSI.o

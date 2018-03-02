@@ -4,13 +4,31 @@
 #include "CSI.h"
 #include "file.h"
 #include "data.h"
+#include "cli_mgr.h"
 
 #define MAX_PATH_LEN 2048
 
 using namespace std;
 
+CmdManager *cmdMgr;
+File *file;
+void open(CmdArgs *args);
+void read(CmdArgs *args);
+void remove(CmdArgs *args);
 int main(int argsN, char *args[])
 {
+    cmdMgr = new CmdManager();
+    cmdMgr->registCommand("open", open);
+    cmdMgr->registCommand("read", read);
+    cmdMgr->registCommand("remove", remove);
+    cmdMgr->registOp("multi", 'm', true);
+    cmdMgr->handleArgs(argsN, args);
+
+
+    while(true)
+    {
+        vector<string> argsInput = readArgs();
+    }
     string filePath = "test.dat";
     /*if (argsN <= 1)
     {
@@ -40,4 +58,19 @@ int main(int argsN, char *args[])
     data = file.readString(1024);
     printf("%s\n", data->toString());
     return 0;
+}
+void read(CmdArgs *args)
+{
+
+}
+void open(CmdArgs *args)
+{
+    if(args->args.size()<=0)
+        throw runtime_error("Arguments error.");
+    file = new File(args->args[0], "r");
+    file->open();
+}
+void remove(CmdArgs *args)
+{
+
 }

@@ -25,6 +25,7 @@ struct CmdOption
       string fullName = "";
       char shortName = '\0';
       bool hasValue = false;
+      char *rawValue = NULL;
 };
 
 struct CmdCommand
@@ -38,13 +39,11 @@ struct CmdCommand
 class CmdArgs
 {
     public:
-      int optionsCount;
-      int argsCount;
+      CmdArgs();
       CmdCommand *command;
-      CmdOption *options;
-      string *args;
+      vector<CmdOption *> options;
+      vector<string> args;
       string workspace;
-
       CmdOption* getOption(string fullName);
 };
 
@@ -73,5 +72,7 @@ class CmdManager
       int handleShortOp(char *arg, int argsRestN, char *argsRest[]);
       int handleFullOp(char *arg, int argsRestN, char *argsRest[]);
       int handleCommand(char *command, int argsRestN, char *argsRest[]);
+      void invoke(CmdCommand cmd);
 };
 
+vector<string> readArgs();
